@@ -1,14 +1,19 @@
 import { describe, expect, it } from 'vitest';
+import { emptyPersonalSignals } from '@/lib/personal';
 import { canonicalUrl, clusterItems, compareItems, titleKey, type RankedItem } from '@/lib/rank';
 
 function item(partial: Partial<RankedItem> & { id: string }): RankedItem {
+  const relevance = partial.relevance ?? 0.5;
   return {
     source: 'google',
     title: 'Title',
     url: `https://example.com/${partial.id}`,
     snippet: '',
     ageHours: null,
-    relevance: 0.5,
+    relevance,
+    personal: emptyPersonalSignals(),
+    interest: 0.5,
+    personalScore: partial.personalScore ?? relevance,
     ranked: true,
     freshness: 0.5,
     position: 1,
@@ -45,14 +50,21 @@ describe('clusterItems', () => {
     expect(clusters[0]!.others.map((o) => o.id)).toEqual(['c']);
   });
   it('orders by the shown percentage, then engine agreement, then engine rank', () => {
-    const a = item({ id: 'a', relevance: 0.84, freshness: 0.1, position: 5 });
-    const b = item({ id: 'b', relevance: 0.78, freshness: 1, position: 1, engines: ['google', 'duckduckgo'] });
-    const c = item({ id: 'c', relevance: 0.841, position: 1 });
+    const a = item({ id: 'a', relevance: 0.84, personalScore: 0.84, freshness: 0.1, position: 5 });
+    const b = item({ id: 'b', relevance: 0.78, personalScore: 0.78, freshness: 1, position: 1, engines: ['google', 'duckduckgo'] });
+    const c = item({ id: 'c', relevance: 0.841, personalScore: 0.841, position: 1 });
     expect([b, a, c].sort((x, y) => compareItems(x, y, 'best')).map((i) => i.id)).toEqual(['c', 'a', 'b']);
     const old = item({ id: 'old', relevance: 0.9, ageHours: 100 });
     const fresh = item({ id: 'fresh', relevance: 0.6, ageHours: 2 });
     const unknown = item({ id: 'unknown', relevance: 0.95, ageHours: null });
     expect([old, unknown, fresh].sort((x, y) => compareItems(x, y, 'newest')).map((i) => i.id)).toEqual(['fresh', 'old', 'unknown']);
+  });
+
+  it('lets personal fit reorder similarly relevant results', () => {
+    const generic = item({ id: 'generic', relevance: 0.82, personalScore: 0.60 });
+    const tailored = item({ id: 'tailored', relevance: 0.78, personalScore: 0.72 });
+    expect([generic, tailored].sort((a, b) => compareItems(a, b, 'best')).map((i) => i.id))
+      .toEqual(['tailored', 'generic']);
   });
 });
 

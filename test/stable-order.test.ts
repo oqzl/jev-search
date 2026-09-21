@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest';
+import { emptyPersonalSignals } from '@/lib/personal';
 import { clusterInOrder, type RankedItem } from '@/lib/rank';
 import { EMPTY_PLACEMENT, place } from '@/lib/stable-order';
 
 function item(id: string, relevance: number, ranked = true): RankedItem {
-  return { id, source: 'google', title: id, url: `https://e.com/${id}`, snippet: '', ageHours: null, relevance, ranked, freshness: 0.5, position: 1, engines: ['google'] };
+  return { id, source: 'google', title: id, url: `https://e.com/${id}`, snippet: '', ageHours: null, relevance, personal: emptyPersonalSignals(), interest: 0.5, personalScore: relevance, ranked, freshness: 0.5, position: 1, engines: ['google'] };
 }
 
 describe('clusterInOrder', () => {

@@ -10,6 +10,7 @@
  * - Cloudflare Workers AI binding, model `typesafe/jev`.
  *   Docs: https://developers.cloudflare.com/ai/models/typesafe/jev/
  */
+import { PERSONAL_SIGNALS, emptyPersonalSignals, personalInterestScore, personalizedScore, type PersonalSignals } from './personal';
 import { SOURCES, WINDOWS, type SourceId, type WindowId } from './sources';
 
 export type ProviderId = 'typesafe' | 'vercel' | 'cloudflare';
@@ -404,15 +405,26 @@ export interface RerankInput {
 
 const RERANK_BATCH = 40;
 
+export interface RerankResult {
+  relevance: Record<string, number>;
+  personal: Record<string, PersonalSignals>;
+  interest: Record<string, number>;
+  score: Record<string, number>;
+  usage: SystemOneResponse['usage'];
+}
+
 export async function rerank(
   config: JudgeConfig,
   request: string,
   items: RerankInput[],
   signal?: AbortSignal
-): Promise<{ relevance: Record<string, number>; usage: SystemOneResponse['usage'] }> {
+): Promise<RerankResult> {
   const relevance: Record<string, number> = {};
+  const personal: Record<string, PersonalSignals> = {};
+  const interest: Record<string, number> = {};
+  const score: Record<string, number> = {};
   const usage = { input_tokens: 0, output_tokens: 0 };
-  if (items.length === 0) return { relevance, usage };
+  if (items.length === 0) return { relevance, personal, interest, score, usage };
 
   const batches: RerankInput[][] = [];
   for (let i = 0; i < items.length; i += RERANK_BATCH) {
@@ -431,6 +443,13 @@ export async function rerank(
             false: 'The result is about something else that only shares words with the request (a different meaning of the same word, a different product, a person with the same name) or is unrelated',
           },
         };
+        for (const personalSignal of PERSONAL_SIGNALS) {
+          questions[`p${i}_${personalSignal.id}`] = {
+            type: 'noul',
+            instructions: `${personalSignal.question} Judge \`results[${i}]\` from its title and snippet; do not assume facts that are not shown.`,
+            criteria: { true: personalSignal.yes, false: personalSignal.no },
+          };
+        }
       });
       const state = {
         request,
@@ -450,8 +469,16 @@ export async function rerank(
     batches[b]!.forEach((item, i) => {
       const a = res.answers[`r${i}`];
       relevance[item.id] = a?.type === 'noul' ? a.noul : 0;
+      const values = emptyPersonalSignals();
+      for (const personalSignal of PERSONAL_SIGNALS) {
+        const answer = res.answers[`p${i}_${personalSignal.id}`];
+        values[personalSignal.id] = answer?.type === 'noul' ? answer.noul : 0;
+      }
+      personal[item.id] = values;
+      interest[item.id] = personalInterestScore(values);
+      score[item.id] = personalizedScore(relevance[item.id]!, interest[item.id]!);
     });
   });
 
-  return { relevance, usage };
+  return { relevance, personal, interest, score, usage };
 }

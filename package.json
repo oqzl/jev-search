@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Jev Search by Search1API: search the web across engines, with sources chosen and results ranked by TypeSafe's Jev.",
+  "description": "Personalized Jev Search: source selection and reranking with TypeSafe Jev, tuned for oqzl's discovery criteria.",
   "scripts": {
     "dev": "vite dev --port 3030",
     "generate-routes": "tsr generate",
@@ -48,12 +48,12 @@
   },
   "packageManager": "pnpm@10.8.0",
   "license": "MIT",
-  "homepage": "https://jev.s1.dev",
+  "homepage": "https://github.com/oqzl/jev-search#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/superagents-lab/jev-search.git"
+    "url": "https://github.com/oqzl/jev-search.git"
   },
   "bugs": {
-    "url": "https://github.com/superagents-lab/jev-search/issues"
+    "url": "https://github.com/oqzl/jev-search/issues"
   }
 }

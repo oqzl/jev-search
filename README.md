@@ -1,20 +1,20 @@
 # Jev Search
 
-[![Jev Search homepage](public/og-home.png)](https://jev.s1.dev)
+![Jev Search interface](public/og-home.png)
 
-Search the web in plain language. [TypeSafe's Jev](https://typesafe.ai) chooses sources, time ranges and search terms, then ranks the results returned through [Search1API](https://www.search1api.com). You get links and snippets, with visible relevance scores and editable filters. No generated answers.
+Search the web in plain language. [TypeSafe's Jev](https://typesafe.ai) chooses sources, time ranges and search terms, then ranks the results returned through [Search1API](https://www.search1api.com). This fork also scores each result against seven personal discovery signals: reproducibility, low running cost, GitHub star potential, X buzz potential, practical usefulness, Shipaton fit and board-game convertibility. No generated answers.
 
-**[Try Jev Search](https://jev.s1.dev)**
+Upstream demo: [jev.s1.dev](https://jev.s1.dev) (does not include this fork's personal scoring).
 
 Install it from the browser as an app (Add to Home Screen on iOS, Install app on Chrome and Edge). Searches still need a network connection; the installed app caches only an offline page, not results.
 
-Built by Search1API. This is an independent project, not an official TypeSafe product.
+This fork is based on [superagents-lab/jev-search](https://github.com/superagents-lab/jev-search), built by Search1API. It is maintained independently for oqzl; issues and pull requests for this variant should target `oqzl/jev-search`, not the upstream repository. This is not an official TypeSafe product.
 
 ## How it works
 
 1. **Understand.** Jev answers typed questions about your request. The application uses those judgments to choose a query, sources and a time range. You can override the source and time chips.
 2. **Search.** Google, DuckDuckGo and Yandex search the open web. Hacker News, Reddit and GitHub each combine a Google site-restricted search with their dedicated engine (Hacker News uses the news endpoint). X, arXiv, YouTube, Wikipedia, IMDb and WeChat use vertical engines. Calls run concurrently; one failed engine does not discard another engine's results.
-3. **Rank.** Jev scores each result for relevance. Results are merged by URL, ordered by relevance, engine agreement and original rank, and streamed as each lane finishes. Lower-scoring results are grouped separately. A failed source shows a warning rather than a zero-result count.
+3. **Rank.** Jev scores each result for relevance and the seven personal discovery signals in the same evaluation request. Results are merged by URL and ordered by a personalized match that keeps relevance as the gate, then by raw relevance, engine agreement and original rank. Lower-relevance results are grouped separately. A failed source shows a warning rather than a zero-result count.
 
 Try “Rust async runtimes on Hacker News this month”, “What do Reddit users think of the Framework laptop?”, or “New papers on speculative decoding”. These are plain-language requests, not hardcoded filters; the last one names no source or time and lets Jev choose. Model choices and provider coverage can vary.
 
@@ -29,7 +29,7 @@ The optional `s` source list is capped at the number of supported sources (curre
 Requires Node.js 22.12+ and pnpm 10.8.0. Obtain an API key from [Search1API](https://www.search1api.com) and credentials for at least one Jev provider: [TypeSafe](https://typesafe.ai), [Cloudflare Workers AI](https://developers.cloudflare.com/ai/models/typesafe/jev/) or [Vercel AI Gateway](https://vercel.com/ai-gateway/models/jev); see [Jev providers](#jev-providers).
 
 ```bash
-git clone https://github.com/superagents-lab/jev-search.git
+git clone https://github.com/oqzl/jev-search.git
 cd jev-search
 corepack enable
 pnpm install --frozen-lockfile

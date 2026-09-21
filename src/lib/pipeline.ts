@@ -2,6 +2,7 @@ import { cachedSearch, type ResultCache } from './cache';
 import { buildCandidates } from './candidates';
 import { freshnessScore, isPublicationStale, resolvePublication, stripAgePrefix } from './freshness';
 import { mergeItems } from './merge';
+import { emptyPersonalSignals } from './personal';
 import type { RankedItem } from './rank';
 import { search, type RawResult, type Search1ApiConfig, type SearchParams } from './search1api';
 import {
@@ -216,6 +217,9 @@ export async function* askStream(
         snippet: stripAgePrefix(row.snippet),
         ...publication,
         relevance: 0,
+        personal: emptyPersonalSignals(),
+        interest: 0,
+        personalScore: 0,
         ranked: false,
         freshness: freshnessScore(ageHours, win.hours),
         position: index + 1,
@@ -240,6 +244,9 @@ export async function* askStream(
         tokens += scored.usage.input_tokens;
         for (const item of items) {
           item.relevance = scored.relevance[item.id] ?? 0;
+          item.personal = scored.personal[item.id] ?? emptyPersonalSignals();
+          item.interest = scored.interest[item.id] ?? 0;
+          item.personalScore = scored.score[item.id] ?? 0;
           item.ranked = true;
         }
       } catch (err) {

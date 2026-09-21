@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { formatPublicationAge } from '@/lib/freshness';
+import { PERSONAL_SIGNALS } from '@/lib/personal';
 import type { Cluster, RankedItem } from '@/lib/rank';
 import { sourceById } from '@/lib/sources';
 import { cn } from '@/lib/utils';
@@ -24,6 +25,11 @@ function ResultRow({
   minor?: boolean;
 }) {
   const age = formatPublicationAge(item);
+  const strongest = PERSONAL_SIGNALS
+    .map((signal) => ({ ...signal, value: item.personal[signal.id] }))
+    .filter((signal) => signal.value >= 0.5)
+    .sort((a, b) => b.value - a.value)
+    .slice(0, 2);
 
   return (
     <article className={cn('group', minor ? 'pl-4 border-l' : '')}>
@@ -51,19 +57,29 @@ function ResultRow({
       {!minor && item.snippet && (
         <p className="mt-0.5 text-sm text-muted-foreground line-clamp-2">{item.snippet}</p>
       )}
-      <div className="mt-1 flex items-center gap-3 text-xs text-muted-foreground">
-        <span
-          className="inline-flex items-center gap-1"
-          title="How sure Jev is that this result is about what you asked"
-        >
-          <span
-            className={cn(
-              'inline-block size-2 rounded-full',
-              item.relevance >= 0.7 ? 'bg-emerald-500' : item.relevance >= 0.4 ? 'bg-amber-500' : 'bg-neutral-400'
-            )}
-          />
-          {Math.round(item.relevance * 100)}% on topic
-        </span>
+      <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-muted-foreground">
+        {item.ranked ? (
+          <>
+            <span
+              className="inline-flex items-center gap-1"
+              title="Overall match: topic relevance adjusted by the seven personal-interest signals"
+            >
+              <span
+                className={cn(
+                  'inline-block size-2 rounded-full',
+                  item.personalScore >= 0.7 ? 'bg-emerald-500' : item.personalScore >= 0.4 ? 'bg-amber-500' : 'bg-neutral-400'
+                )}
+              />
+              {Math.round(item.personalScore * 100)}% match
+            </span>
+            <span>· {Math.round(item.relevance * 100)}% topic</span>
+            {strongest.map((signal) => (
+              <span key={signal.id}>· {signal.label} {Math.round(signal.value * 100)}%</span>
+            ))}
+          </>
+        ) : (
+          <span>Jev score unavailable</span>
+        )}
       </div>
     </article>
   );

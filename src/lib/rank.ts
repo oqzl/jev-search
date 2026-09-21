@@ -1,3 +1,4 @@
+import type { PersonalSignals } from './personal';
 import type { SourceId } from './sources';
 
 export interface RankedItem {
@@ -12,6 +13,12 @@ export interface RankedItem {
   ageHours: number | null;
   /** Judge's probability that the item is about what the user asked. 0 until `ranked`. */
   relevance: number;
+  /** Seven personal-interest judgments used to distinguish similarly relevant results. */
+  personal: PersonalSignals;
+  /** Mean of the personal-interest judgments, 0..1. */
+  interest: number;
+  /** Overall personalized match. Relevance remains the gate; interest adjusts ordering within it. */
+  personalScore: number;
   /** False while the engine has returned the row but the judge has not scored it yet. */
   ranked: boolean;
   /** 0..1, newer is higher, relative to the chosen window. */
@@ -27,9 +34,9 @@ export interface RankedItem {
 export type SortMode = 'best' | 'newest';
 
 /**
- * Ordering is exactly what the row shows. Best match: the judge's on-topic
- * percentage, ties broken by how many engines agreed, then engine rank.
- * Newest: known age first, ties by on-topic; unknown age goes last.
+ * Ordering is exactly what the row shows. Best match: personalized match,
+ * then raw topic relevance, engine agreement and engine rank.
+ * Newest: known age first, ties by personalized match; unknown age goes last.
  */
 export function compareItems(a: RankedItem, b: RankedItem, mode: SortMode): number {
   if (a.ranked !== b.ranked) return a.ranked ? -1 : 1; // unranked rows wait at the bottom
@@ -38,6 +45,9 @@ export function compareItems(a: RankedItem, b: RankedItem, mode: SortMode): numb
     const bb = b.ageHours ?? Number.POSITIVE_INFINITY;
     if (aa !== bb) return aa - bb;
   }
+  const sa = Math.round(a.personalScore * 100);
+  const sb = Math.round(b.personalScore * 100);
+  if (sa !== sb) return sb - sa;
   const ra = Math.round(a.relevance * 100);
   const rb = Math.round(b.relevance * 100);
   if (ra !== rb) return rb - ra;

@@ -2,12 +2,14 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import { Results } from '@/components/results';
+import { emptyPersonalSignals } from '@/lib/personal';
 import type { RankedItem } from '@/lib/rank';
 
 function renderResult(publication: Pick<RankedItem, 'publishedDate' | 'ageHours'>): string {
   const lead: RankedItem = {
     id: 'test', source: 'google', title: 'A result', url: 'https://example.com',
-    snippet: 'Some content', relevance: 0.9, ranked: true, freshness: 0.5,
+    snippet: 'Some content', relevance: 0.9, personal: emptyPersonalSignals(), interest: 0.8,
+    personalScore: 0.86, ranked: true, freshness: 0.5,
     position: 1, engines: ['google'], ...publication,
   };
   return renderToStaticMarkup(createElement(Results, {

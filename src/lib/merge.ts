@@ -1,3 +1,4 @@
+import { personalizedScore } from './personal';
 import { canonicalUrl, type RankedItem } from './rank';
 
 /**
@@ -26,10 +27,15 @@ export function mergeItems(existing: RankedItem[], incoming: RankedItem[]): Rank
     // date wins over a snippet estimate regardless of lane arrival order.
     const publication = (!found.publishedDate && item.publishedDate) || found.ageHours === null
       ? item : found;
+    const relevance = Math.max(found.relevance, item.relevance);
+    const personal = found.interest >= item.interest ? found : item;
     const merged: RankedItem = {
       ...found,
       engines: [...new Set([...found.engines, ...item.engines])],
-      relevance: Math.max(found.relevance, item.relevance),
+      relevance,
+      personal: personal.personal,
+      interest: personal.interest,
+      personalScore: personalizedScore(relevance, personal.interest),
       ranked: found.ranked || item.ranked,
       position: Math.min(found.position, item.position),
       publishedDate: publication.publishedDate,
