@@ -62,19 +62,18 @@ export function SearchBox({
       }}
       role="search"
     >
-      {/* The pill is this wrapper, so the text fade below never touches the border. */}
-      <div className="rounded-3xl border border-input shadow-sm transition-[color,box-shadow] has-focus-visible:border-ring has-focus-visible:shadow-md has-focus-visible:ring-[3px] has-focus-visible:ring-ring/50 dark:bg-input/30">
+      <div className="rounded-lg border border-input bg-card/90 shadow-[0_8px_28px_rgba(30,20,28,0.06)] transition-[border-color,box-shadow,background-color] has-focus-visible:border-ring has-focus-visible:bg-card has-focus-visible:shadow-[0_10px_34px_rgba(30,20,28,0.09)] dark:bg-card/80">
         <SearchIcon
           aria-hidden
-          className={cn('pointer-events-none absolute left-4 text-muted-foreground', compact ? 'top-3 size-4' : 'top-3.5 size-5')}
+          className={cn('pointer-events-none absolute left-3.5 text-muted-foreground/80', compact ? 'top-2.5 size-4' : 'top-[15px] size-4.5')}
         />
         <textarea
           aria-label="Search"
           autoComplete="off"
           autoFocus={autoFocus}
           className={cn(
-            'block w-full min-w-0 resize-none overflow-hidden bg-transparent pl-11 pr-4 leading-6 outline-none placeholder:text-muted-foreground',
-            compact ? 'py-2 text-base md:text-sm' : 'py-3 text-base',
+            'block w-full min-w-0 resize-none overflow-hidden bg-transparent pl-10 pr-4 leading-6 outline-none placeholder:text-muted-foreground/75',
+            compact ? 'py-2 text-base md:text-[13px]' : 'py-3.5 text-base',
             !expanded && clipped && '[mask-image:linear-gradient(to_right,black_calc(100%-3.5rem),transparent_calc(100%-1rem))]'
           )}
           enterKeyHint="search"

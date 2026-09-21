@@ -21,14 +21,14 @@ export function EngineStrip({ preview }: { preview?: EnginePreview | null }) {
     : '';
 
   return (
-    <div className="flex flex-col items-center gap-2">
-      <div className="flex flex-col items-center gap-3 sm:flex-row">
-        <p className="text-xs text-muted-foreground sm:w-28 sm:text-right">
+    <div className="flex flex-col items-start gap-1.5 rounded-lg border bg-card/50 px-3 py-2.5 shadow-[0_1px_0_rgba(0,0,0,0.02)]">
+      <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center">
+        <p className="text-[11px] text-muted-foreground sm:w-20">
           {windowLabel ? `${windowLabel} ·` : 'Search via'}
         </p>
         <ul
           aria-label="Search engines"
-          className="grid grid-cols-6 gap-x-[22px] gap-y-4 sm:flex sm:items-center sm:gap-x-3 sm:gap-y-1.5"
+          className="grid grid-cols-6 gap-x-4 gap-y-2 sm:flex sm:items-center sm:gap-x-2.5"
         >
           {SOURCES.map((s) => (
             <li className="inline-flex items-center" key={s.id} title={s.label}>
@@ -36,9 +36,9 @@ export function EngineStrip({ preview }: { preview?: EnginePreview | null }) {
             </li>
           ))}
         </ul>
-        <span aria-hidden className="hidden sm:block sm:w-28" />
+        <span aria-hidden className="hidden sm:block sm:w-2" />
       </div>
-      <p aria-live="polite" className="hidden h-[18px] text-xs text-primary-text sm:block">
+      <p aria-live="polite" className="hidden min-h-[16px] text-[11px] text-primary-text sm:block">
         {caption}
       </p>
     </div>

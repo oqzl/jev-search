@@ -48,10 +48,10 @@ export const Route = createFileRoute('/search')({
 
 function Header({ q }: { q: string }) {
   return (
-    <header className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur">
-      <div className="relative mx-auto flex max-w-5xl flex-wrap items-center gap-x-4 gap-y-3 px-4 py-3">
+    <header className="sticky top-0 z-10 border-b bg-background/80 backdrop-blur-xl">
+      <div className="relative mx-auto flex max-w-6xl flex-wrap items-center gap-x-3 gap-y-2 px-4 py-2.5 sm:px-5">
         <Wordmark size="sm" />
-        <div className="order-last w-full min-w-0 max-w-2xl sm:order-none sm:flex-1">
+        <div className="order-last w-full min-w-0 max-w-3xl sm:order-none sm:flex-1">
           <SearchBox initial={q} compact key={q} />
         </div>
         <div className="ml-auto flex items-center gap-1">
@@ -87,19 +87,19 @@ function SearchPage() {
   return (
     <>
       <Header q={params.q} />
-      <main className="mx-auto w-full max-w-5xl px-4 py-4">
+      <main className="mx-auto w-full max-w-6xl px-4 pb-14 pt-3 sm:px-5">
         {!params.q.trim() && <p className="text-muted-foreground">Type something to search.</p>}
 
         {state.phase === 'error' && (
           <div className="rounded-lg border border-destructive/40 bg-destructive/5 p-4 text-sm">
-            <p className="font-medium">Search failed</p>
+            <p>Search failed</p>
             <p className="mt-1 text-muted-foreground">{state.message}</p>
           </div>
         )}
 
         {params.q.trim() && state.phase !== 'error' && (
-          <div className="max-w-3xl">
-            <div className="min-w-0">
+          <div className="max-w-4xl">
+            <div className="min-w-0 rounded-lg border bg-card/50 px-3 py-3 shadow-[0_1px_0_rgba(0,0,0,0.02)] sm:px-4 sm:py-4">
               <Filters
                 state={state}
                 explicitWindow={params.w}

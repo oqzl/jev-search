@@ -113,10 +113,10 @@ export function Working({ state, actions }: { state: AskState; actions?: React.R
   } else summary = <>Checking which of the {found} answer you…</>;
 
   return (
-    <section className="mt-4 text-sm">
+    <section className="mt-3 border-b border-border/70 pb-3 text-[12px]">
       <div className="flex items-start gap-4">
         <button
-          className="group flex min-w-0 flex-1 items-start gap-2 text-left text-muted-foreground hover:text-foreground"
+          className="group flex min-w-0 flex-1 items-start gap-2 text-left text-muted-foreground transition-colors hover:text-foreground"
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
           type="button"
@@ -140,7 +140,7 @@ export function Working({ state, actions }: { state: AskState; actions?: React.R
       </div>
 
       <div className="fold" data-open={open ? '' : undefined}>
-        <ol className="mt-2 ml-1.5 flex flex-col gap-1.5 border-l pl-4">
+        <ol className="mt-2 flex flex-col gap-1.5 rounded-md border bg-muted/30 px-3 py-2.5">
           {intent && (
             <li className="flex items-center gap-2 text-muted-foreground">
               <Mark state="done" />

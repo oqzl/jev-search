@@ -32,8 +32,8 @@ function ResultRow({
     .slice(0, 2);
 
   return (
-    <article className={cn('group', minor ? 'pl-4 border-l' : '')}>
-      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+    <article className={cn('group', minor ? 'ml-1 border-l border-border/70 pl-3' : '')}>
+      <div className="flex items-center gap-1.5 text-[11px] leading-4 text-muted-foreground">
         <span className="inline-flex size-4 shrink-0 items-center justify-center" title={sourceById(item.source).label}>
           <SourceIcon className="size-3.5" id={item.source} />
         </span>
@@ -45,8 +45,8 @@ function ResultRow({
       </div>
       <a
         className={cn(
-          'mt-0.5 block text-link visited:text-visited hover:underline',
-          minor ? 'text-base' : 'text-lg'
+          'mt-1 block leading-snug text-link visited:text-visited hover:underline',
+          minor ? 'text-[14px]' : 'text-[17px]'
         )}
         href={item.url}
         rel="noreferrer"
@@ -55,13 +55,13 @@ function ResultRow({
         {item.title}
       </a>
       {!minor && item.snippet && (
-        <p className="mt-0.5 text-sm text-muted-foreground line-clamp-2">{item.snippet}</p>
+        <p className="mt-1 max-w-3xl text-[13px] leading-5 text-muted-foreground line-clamp-2">{item.snippet}</p>
       )}
-      <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-muted-foreground">
+      <div className="mt-2 flex flex-wrap items-center gap-1 text-[11px] text-muted-foreground">
         {item.ranked ? (
           <>
             <span
-              className="inline-flex items-center gap-1"
+              className="inline-flex items-center gap-1 rounded-md border border-border/70 bg-muted/50 px-1.5 py-0.5"
               title="Overall match: topic relevance adjusted by the seven personal-interest signals"
             >
               <span
@@ -72,9 +72,11 @@ function ResultRow({
               />
               {Math.round(item.personalScore * 100)}% match
             </span>
-            <span>· {Math.round(item.relevance * 100)}% topic</span>
+            <span className="rounded-md bg-muted/50 px-1.5 py-0.5">{Math.round(item.relevance * 100)}% topic</span>
             {strongest.map((signal) => (
-              <span key={signal.id}>· {signal.label} {Math.round(signal.value * 100)}%</span>
+              <span className="rounded-md bg-muted/50 px-1.5 py-0.5" key={signal.id}>
+                {signal.label} {Math.round(signal.value * 100)}%
+              </span>
             ))}
           </>
         ) : (
@@ -110,7 +112,7 @@ export function Results({
 
   const render = (list: Cluster[]) =>
     list.map((cluster) => (
-      <li className="enter flex flex-col gap-2" key={cluster.lead.id}>
+      <li className="enter flex flex-col gap-2 py-4 first:pt-3 last:pb-1" key={cluster.lead.id}>
         <ResultRow item={cluster.lead} />
         {cluster.others.map((item) => (
           <ResultRow item={item} key={item.id} minor />
@@ -120,7 +122,7 @@ export function Results({
 
   return (
     <>
-      <ol className="mt-6 flex flex-col gap-6">{render(onTopic)}</ol>
+      <ol className="mt-1 divide-y divide-border/70">{render(onTopic)}</ol>
       {offTopic.length > 0 && !streaming && (
         <div className="mt-8">
           <button

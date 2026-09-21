@@ -35,21 +35,21 @@ function Home() {
   const [preview, setPreview] = useState<EnginePreview | null>(null);
 
   return (
-    <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col items-center justify-center px-4 pb-12 pt-16 sm:py-20">
-      <h1 className="vt-wordmark display text-center text-[clamp(2.75rem,6vw,4rem)] leading-none tracking-[-0.01em]">
-        Jev <span className="text-primary">Search</span>
+    <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col justify-center px-5 pb-16 pt-24 sm:pb-24 sm:pt-28">
+      <h1 className="vt-wordmark display text-[clamp(2.35rem,5vw,3.6rem)] leading-[0.95] tracking-[-0.045em]">
+        Jev <span className="text-primary-text">Search</span>
       </h1>
-      <p className="mt-3 text-center text-[15px] text-muted-foreground sm:mt-4 sm:text-lg">
+      <p className="mt-3 text-[14px] text-muted-foreground sm:text-[15px]">
         Picks where to search. Ranks what comes back.
       </p>
-      <div className="mt-7 w-full sm:mt-8">
+      <div className="mt-8 w-full sm:mt-10">
         <SearchBox autoFocus />
       </div>
-      <ul aria-label="Example searches" className="mt-4 w-full px-4 text-[15px] sm:text-sm">
+      <ul aria-label="Example searches" className="mt-4 w-full border-y text-[13px] sm:text-sm">
         {EXAMPLES.map((example) => (
           <li key={example.q}>
             <Link
-              className="inline-block min-h-11 py-2.5 text-muted-foreground hover:text-foreground hover:underline sm:min-h-10 sm:py-2"
+              className="block min-h-10 border-b border-border/60 px-1 py-2.5 text-muted-foreground transition-colors last:border-b-0 hover:bg-accent/40 hover:text-foreground sm:min-h-9 sm:py-2"
               onBlur={() => setPreview(null)}
               onFocus={() => setPreview(example)}
               onMouseEnter={() => setPreview(example)}
@@ -63,7 +63,7 @@ function Home() {
           </li>
         ))}
       </ul>
-      <div className="mt-9 sm:mt-10">
+      <div className="mt-8 self-start sm:mt-9">
         <EngineStrip preview={preview} />
       </div>
     </main>

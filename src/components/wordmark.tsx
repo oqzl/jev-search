@@ -6,13 +6,13 @@ export function Wordmark({ size }: { size: 'sm' | 'lg' }) {
   return (
     <Link
       className={cn(
-        'vt-wordmark inline-flex shrink-0 items-center font-semibold tracking-tight select-none',
-        size === 'lg' ? 'gap-3 text-5xl' : 'gap-2 text-xl'
+        'vt-wordmark inline-flex shrink-0 items-center tracking-[-0.025em] select-none',
+        size === 'lg' ? 'gap-3 text-4xl' : 'gap-1.5 text-[15px]'
       )}
       to="/"
       viewTransition
     >
-      <Logo className={size === 'lg' ? 'size-12' : 'size-6'} />
+      <Logo className={size === 'lg' ? 'size-10' : 'size-5'} />
       <span className="whitespace-nowrap leading-tight">
         Jev<span className="text-primary-text"> Search</span>
       </span>

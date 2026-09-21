@@ -64,7 +64,7 @@ describe('theme before first paint', () => {
       localStorage: { getItem: () => 'dark' },
       matchMedia: () => ({ matches: false }),
     });
-    expect(meta.content).toBe('#191619');
+    expect(meta.content).toBe('#111012');
   });
 });
 

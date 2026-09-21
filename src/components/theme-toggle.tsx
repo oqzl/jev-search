@@ -1,7 +1,7 @@
 import { Moon, Sun } from 'lucide-react';
 import { useEffect } from 'react';
 
-export const THEME_SURFACE = { light: '#fffafd', dark: '#191619' } as const;
+export const THEME_SURFACE = { light: '#fbfafb', dark: '#111012' } as const;
 
 export function paintThemeColor(dark: boolean) {
   const meta = document.querySelector('meta[name="theme-color"]');
@@ -36,7 +36,7 @@ export function ThemeToggle() {
 
   return (
     <button
-      className="inline-flex size-11 shrink-0 items-center justify-center rounded-full text-muted-foreground hover:bg-accent hover:text-foreground"
+      className="inline-flex size-9 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
       onClick={() => {
         const root = document.documentElement;
         const dark = root.classList.toggle('dark');
@@ -47,8 +47,8 @@ export function ThemeToggle() {
       title="Toggle light / dark mode"
       type="button"
     >
-      <Moon aria-hidden className="size-5 dark:hidden" />
-      <Sun aria-hidden className="hidden size-5 dark:block" />
+      <Moon aria-hidden className="size-4.5 dark:hidden" />
+      <Sun aria-hidden className="hidden size-4.5 dark:block" />
       <span className="sr-only dark:hidden">Switch to dark mode</span>
       <span className="sr-only hidden dark:block">Switch to light mode</span>
     </button>

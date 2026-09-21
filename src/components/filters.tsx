@@ -6,8 +6,8 @@ import { cn } from '@/lib/utils';
 import { SourceIcon } from './source-icon';
 
 const chip =
-  'chip inline-flex h-8 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-3 text-sm text-muted-foreground hover:bg-accent disabled:opacity-50';
-const active = 'border-foreground/50 bg-accent/60 text-foreground';
+  'chip inline-flex h-7 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-md border bg-card px-2.5 text-xs text-muted-foreground hover:border-foreground/20 hover:bg-accent/55 disabled:opacity-50';
+const active = 'border-primary/30 bg-primary/5 text-foreground';
 
 /**
  * One row that is both the judge's reading of the question and the progress
@@ -52,8 +52,8 @@ export function Filters({
   const others = SOURCES.filter((s) => !selected.has(s.id));
 
   return (
-    <div className="enter flex flex-col gap-2">
-      <div className="flex flex-wrap items-center gap-2">
+    <div className="enter flex flex-col gap-2.5">
+      <div className="flex flex-wrap items-center gap-1.5">
         <button
           className={cn(chip, active)}
           onClick={() => setShowWindows((v) => !v)}
@@ -63,7 +63,7 @@ export function Filters({
           {windowById(intent.window).label}
           <ChevronDownIcon className={cn('size-3.5 opacity-60 transition-transform', showWindows && 'rotate-180')} />
         </button>
-        <span className="text-muted-foreground/40">·</span>
+        <span className="mx-0.5 h-4 w-px bg-border" />
         {chosen.map((s) => {
           const lanes = sourceById(s.id).lanes.map((l) => state.lanes[`${s.id}/${l.service}`]);
           const done = lanes.every(Boolean);
@@ -77,7 +77,7 @@ export function Filters({
                   ? `${s.label}: search failed. Click to leave it out.`
                   : `${s.label}${done ? `, ${counts.get(s.id) ?? 0} results` : ''}. Click to leave it out.`
               }
-              className={cn(chip, active, 'px-2.5 sm:px-3')}
+              className={cn(chip, active, 'px-2 sm:px-2.5')}
               key={s.id}
               onClick={() => toggleSource(s.id)}
               title={failed ? `${s.label} couldn't finish searching. Click to leave it out.` : `Searching ${s.label}. Click to leave it out.`}
@@ -93,7 +93,7 @@ export function Filters({
         })}
         {others.length > 0 && (
           <button
-            className={cn(chip, 'border-dashed')}
+            className={cn(chip, 'border-dashed bg-transparent')}
             onClick={() => setShowMore((v) => !v)}
             title="Other places to look"
             type="button"
